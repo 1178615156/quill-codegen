@@ -20,9 +20,9 @@ object Main {
       //quill schema package name 
       override val packageName     : String = "hello.world.tables"
       override val tablePackageName: String = genCaseClass.packageName
-      
+      override val traitName       : String = "QuillQuerySchema"
       /** it will gen like this
-        * trait $name {
+        * trait ${traitName} {
         *   self : QuillConteext =>
         * }
         */
@@ -30,7 +30,9 @@ object Main {
       
       /** it will gen like this
         * import ctx._ 
+        *  trait ${traitName} {
         *  
+        *  }
         */
       override val importQuillContextName = None 
     }
