@@ -25,11 +25,16 @@ trait NameMapping {
   def tableName2className(s: String) = s.split("_").toList.map(headUpper).mkString("")
 
   def columnName2fieldName(s: String) = {
-    val name = headLower(s.split("_").toList.map(headUpper).mkString(""))
-    if(s.forall(e => e.isLetterOrDigit || e == '_'))
-      name
-    else
-      s"`${name}`"
+    val name: String = headLower(s.split("_").toList.map(headUpper).mkString(""))
+    name match {
+      case "class"  => s"`${name}`"
+      case "object" => s"`${name}`"
+      case "type"   => s"`${name}`"
+
+      case name if name.forall(e => e.isLetterOrDigit || e == '_') => name
+
+      case _ => s"`${name}`"
+    }
 
   }
 
