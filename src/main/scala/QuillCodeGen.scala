@@ -2,9 +2,10 @@ import java.io.PrintWriter
 
 import slick.jdbc.JdbcProfile
 import slick.model.{Column, Model}
-
 import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration.Duration
+
+import slick.ast.ColumnOption
 
 trait MakeModel {
   val profileInstance: JdbcProfile
@@ -63,7 +64,8 @@ trait GenCaseClass {
   private def column2filed(column: Column)(implicit nameMapping: NameMapping) = {
     import nameMapping._
     val fieldName = columnName2fieldName(column.name)
-    val fieldType = if(column.nullable) s"Option[${column.tpe}]" else column.tpe
+    val fieldType = if(column.nullable || column.options.contains(ColumnOption.AutoInc)
+    ) s"Option[${column.tpe}]" else column.tpe
     s"""$fieldName:$fieldType"""
   }
 
@@ -97,7 +99,7 @@ trait GenQuillSchema {
         s"""_.$fieldName -> "$columnName" """
       }
       val body = s"""quote(querySchema[$caseClassName]("$tableName",${columnMappings.mkString(",")}))"""
-      s"val $variableName :Quoted[EntityQuery[$caseClassName]] = $body"
+      s"val $variableName = $body"
     }
     writeFile(querySchemas)
   }
