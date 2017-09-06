@@ -99,7 +99,7 @@ trait GenQuillSchema {
         s"""_.$fieldName -> "$columnName" """
       }
       val body = s"""quote(querySchema[$caseClassName]("$tableName",${columnMappings.mkString(",")}))"""
-      s"val $variableName = $body"
+      s"final val $variableName = $body"
     }
     writeFile(querySchemas)
   }
