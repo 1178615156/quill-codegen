@@ -23,10 +23,13 @@ trait MakeModel {
 }
 
 trait NameMapping {
+  def column2fieldLiteral = false
+
   def tableName2className(s: String) = s.split("_").toList.map(headUpper).mkString("")
 
   def columnName2fieldName(s: String) = {
-    val name: String = headLower(s.split("_").toList.map(headUpper).mkString(""))
+    val name: String =
+      if(column2fieldLiteral) s else headLower(s.split("_").toList.map(headUpper).mkString(""))
     name match {
       case "class"  => s"`${name}`"
       case "object" => s"`${name}`"
@@ -124,7 +127,7 @@ trait GenQuillSchema {
 trait QuillCodeGen extends MakeModel {
   self =>
 
-  implicit val nameMapping = new NameMapping {
+  implicit def nameMapping = new NameMapping {
   }
 
   val genCaseClass  : GenCaseClass
