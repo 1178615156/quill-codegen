@@ -52,11 +52,11 @@ trait NameMapping {
 trait GenCaseClass {
   val packageName: String
   val outFileName: String
-
+  val ignoreTable: Seq[String] = Nil
 
   def run()(implicit m: Model, nameMapping: NameMapping): Unit = {
     import nameMapping._
-    val classes = m.tables.map { table =>
+    val classes = m.tables.filterNot(t => ignoreTable.contains(t.name.table)).map { table =>
       val className = tableName2className(table.name.table)
       val fields = table.columns.map(column2filed)
       s"case class ${className}(${fields.mkString(",")})"
@@ -87,11 +87,11 @@ trait GenQuillSchema {
   val traitName             : String         = "QuillQuerySchema"
   val importQuillContextName: Option[String] = None
   val withQuillContextName  : Option[String] = None
-
+  val ignoreTable           : Seq[String]    = Nil
 
   def run()(implicit m: Model, nameMapping: NameMapping): Unit = {
     import nameMapping._
-    val querySchemas = m.tables.map { table =>
+    val querySchemas = m.tables.filterNot(t => ignoreTable.contains(t.name.table)).map { table =>
       val tableName = table.name.table
       val caseClassName = tableName2className(tableName)
       val variableName = className2variableName(caseClassName)
