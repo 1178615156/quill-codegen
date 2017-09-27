@@ -6,9 +6,11 @@
 object Main {
   implicit val nameMapping   = new NameMapping.Default {
   }
+  // if you are not use mysql
+  // you need add driver lib depend to build.sbt
   //your db
   implicit val databaseModel = new DataBaseModel {
-    override val profileInstance = slick.jdbc.MySQLProfile
+    override val profileInstance = slick.jdbc.MySQLProfile // slick.jdbc.PostgresProfile ...
     override val jdbcDriver      = "com.mysql.cj.jdbc.Driver"
     override val url             = "jdbc:mysql://${IP}:${PORT}/${DB_NAME}?nullNamePatternMatchesAll=true"
     override val user            = Some("USER_NAME")
@@ -27,7 +29,8 @@ object Main {
     override val modelsPackageName: String = genCaseClass.packageName
     override val traitName        : String = "QuillQuerySchema"
     override val style                     = ClassStyle.WithQuillContext("QuillContext")
-
+    // you want to ignore table
+    override val ignoreTable               = Nil
   }
 
   def main(args: Array[String]): Unit = {
