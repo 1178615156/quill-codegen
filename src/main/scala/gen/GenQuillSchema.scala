@@ -2,30 +2,6 @@ package gen
 
 import java.io.PrintWriter
 
-import slick.model.Model
-
-trait ClassStyle
-
-object ClassStyle {
-
-  /** it will gen like this
-    * import [[ctxName]]._
-    * trait ${traitName} {
-    *
-    * }
-    */
-  case class ImportQuillContext(ctxName: String) extends ClassStyle
-
-
-  /** it will gen like this
-    * trait ${traitName} {
-    * self : [[ctxCLass]] =>
-    * }
-    */
-  case class WithQuillContext(ctxCLass: String) extends ClassStyle
-
-}
-
 trait GenQuillSchema {
   val packageName      : String
   val modelsPackageName: String
